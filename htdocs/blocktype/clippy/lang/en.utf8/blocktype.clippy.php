@@ -14,6 +14,20 @@ defined('INTERNAL') || die();
 
 $string['title'] = 'Clippy';
 $string['description'] = 'Display Clippy the helpful clipboard on this page';
+
+$string['agentnameBonzi'] = 'Bonzi';
+$string['agentnameClippy'] = 'Clippy';
+$string['agentnameF1'] = 'F1';
+$string['agentnameGenie'] = 'Genie';
+$string['agentnameGenius'] = 'Genius';
+$string['agentnameLinks'] = 'Links';
+$string['agentnameMerlin'] = 'Merlin';
+$string['agentnamePeedy'] = 'Peedy';
+$string['agentnameRocky'] = 'Rocky';
+$string['agentnameRover'] = 'Rover';
+
+$string['youhaveselectedthisagent'] = 'Your page will show the agent named "%s". (If you don\'t see it now, you may need to reload the page.)';
+
 // $string['description'] = 'Attach a Creative Commons license to your page';
 // $string['blockcontent'] = 'Block content';
 

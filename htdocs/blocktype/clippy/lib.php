@@ -55,6 +55,7 @@ class PluginBlocktypeClippy extends PluginBlocktype {
 	}
 	
 	public static function get_instance_javascript(BlockInstance $bi) {
+		$bid = $bi->get('id');
 		$configdata = $bi->get('configdata');
 		$agent = $configdata['agent'];
 		// Make sure it's a legal array
@@ -65,10 +66,18 @@ class PluginBlocktypeClippy extends PluginBlocktype {
 		return array(
 				array(
 						'file'   => 'js/clippy/build/clippy.js',
+				),
+				array(
+						'file' => 'js/clippyblock.js',
 						'initjs' => <<<JS
-							clippy.load('$agent', function(agent){
-								agent.show();
-							});
+							clippyblock.switchagent('$agent');
+						    jQuery('input.deletebutton[name="action_removeblockinstance_id_{$bid}"]').mouseover(
+						    		function(){
+						    			clippyblock.speak(
+						    				"It looks like you're thinking of deleting me. Are you sure you want to do that? I'm very useful for usability."
+										);
+									}
+							);
 JS
 				)
 		);

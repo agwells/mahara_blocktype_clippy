@@ -8,11 +8,11 @@ var clippy = {};
 clippy.Agent = function (path, data, sounds) {
     this.path = path;
 
-    this._queue = new clippy.Queue($.proxy(this._onQueueEmpty, this));
+    this._queue = new clippy.Queue(jQuery.proxy(this._onQueueEmpty, this));
 
-    this._el = $('<div class="clippy"></div>').hide();
+    this._el = jQuery('<div class="clippy"></div>').hide();
 
-    $(document.body).append(this._el);
+    jQuery(document.body).append(this._el);
 
     this._animator = new clippy.Animator(this._el, path, data, sounds);
 
@@ -84,14 +84,14 @@ clippy.Agent.prototype = {
                 return;
             }
 
-            var callback = $.proxy(function (name, state) {
+            var callback = jQuery.proxy(function (name, state) {
                 // when exited, complete
                 if (state === clippy.Animator.States.EXITED) {
                     complete();
                 }
                 // if waiting,
                 if (state === clippy.Animator.States.WAITING) {
-                    this._el.animate({top:y, left:x}, duration, $.proxy(function () {
+                    this._el.animate({top:y, left:x}, duration, jQuery.proxy(function () {
                         // after we're done with the movement, do the exit animation
                         this._animator.exitAnimation();
                     }, this));
@@ -107,7 +107,7 @@ clippy.Agent.prototype = {
 
         // if we're inside an idle animation,
         if (this._isIdleAnimation() && this._idleDfd && this._idleDfd.state() === 'pending') {
-            this._idleDfd.done($.proxy(function () {
+            this._idleDfd.done(jQuery.proxy(function () {
                 this._playInternal(animation, callback);
             }, this))
         }
@@ -134,7 +134,7 @@ clippy.Agent.prototype = {
 
             // if has timeout, register a timeout function
             if (timeout) {
-                window.setTimeout($.proxy(function () {
+                window.setTimeout(jQuery.proxy(function () {
                     if (completed) return;
                     // exit after timeout
                     this._animator.exitAnimation();
@@ -162,8 +162,8 @@ clippy.Agent.prototype = {
         }
 
         if (this._el.css('top') === 'auto' || !this._el.css('left') === 'auto') {
-            var left = $(window).width() * 0.8;
-            var top = ($(window).height() + $(document).scrollTop()) * 0.8;
+            var left = jQuery(window).width() * 0.8;
+            var top = (jQuery(window).height() + jQuery(document).scrollTop()) * 0.8;
             this._el.css({top:top, left:left});
         }
 
@@ -289,9 +289,9 @@ clippy.Agent.prototype = {
     _onQueueEmpty:function () {
         if (this._hidden || this._isIdleAnimation()) return;
         var idleAnim = this._getIdleAnimation();
-        this._idleDfd = $.Deferred();
+        this._idleDfd = jQuery.Deferred();
 
-        this._animator.showAnimation(idleAnim, $.proxy(this._onIdleComplete, this));
+        this._animator.showAnimation(idleAnim, jQuery.proxy(this._onIdleComplete, this));
     },
 
     _onIdleComplete:function (name, state) {
@@ -335,11 +335,11 @@ clippy.Agent.prototype = {
     /**************************** Events ************************************/
 
     _setupEvents:function () {
-        $(window).on('resize', $.proxy(this.reposition, this));
+        jQuery(window).on('resize', jQuery.proxy(this.reposition, this));
 
-        this._el.on('mousedown', $.proxy(this._onMouseDown, this));
+        this._el.on('mousedown', jQuery.proxy(this._onMouseDown, this));
 
-        this._el.on('dblclick', $.proxy(this._onDoubleClick, this));
+        this._el.on('dblclick', jQuery.proxy(this._onDoubleClick, this));
     },
 
     _onDoubleClick:function () {
@@ -354,10 +354,10 @@ clippy.Agent.prototype = {
         var bH = this._el.outerHeight();
         var bW = this._el.outerWidth();
 
-        var wW = $(window).width();
-        var wH = $(window).height();
-        var sT = $(window).scrollTop();
-        var sL = $(window).scrollLeft();
+        var wW = jQuery(window).width();
+        var wH = jQuery(window).height();
+        var sT = jQuery(window).scrollTop();
+        var sL = jQuery(window).scrollLeft();
 
         var top = o.top - sT;
         var left = o.left - sL;
@@ -393,13 +393,13 @@ clippy.Agent.prototype = {
         this._balloon.hide(true);
         this._offset = this._calculateClickOffset(e);
 
-        this._moveHandle = $.proxy(this._dragMove, this);
-        this._upHandle = $.proxy(this._finishDrag, this);
+        this._moveHandle = jQuery.proxy(this._dragMove, this);
+        this._upHandle = jQuery.proxy(this._finishDrag, this);
 
-        $(window).on('mousemove', this._moveHandle);
-        $(window).on('mouseup', this._upHandle);
+        jQuery(window).on('mousemove', this._moveHandle);
+        jQuery(window).on('mouseup', this._upHandle);
 
-        this._dragUpdateLoop = window.setTimeout($.proxy(this._updateLocation, this), 10);
+        this._dragUpdateLoop = window.setTimeout(jQuery.proxy(this._updateLocation, this), 10);
     },
 
     _calculateClickOffset:function (e) {
@@ -415,7 +415,7 @@ clippy.Agent.prototype = {
 
     _updateLocation:function () {
         this._el.css({top:this._targetY, left:this._taregtX});
-        this._dragUpdateLoop = window.setTimeout($.proxy(this._updateLocation, this), 10);
+        this._dragUpdateLoop = window.setTimeout(jQuery.proxy(this._updateLocation, this), 10);
     },
 
     _dragMove:function (e) {
@@ -429,8 +429,8 @@ clippy.Agent.prototype = {
     _finishDrag:function () {
         window.clearTimeout(this._dragUpdateLoop);
         // remove handles
-        $(window).off('mousemove', this._moveHandle);
-        $(window).off('mouseup', this._upHandle);
+        jQuery(window).off('mousemove', this._moveHandle);
+        jQuery(window).off('mouseup', this._upHandle);
         // resume animations
         this._balloon.show();
         this.reposition();
@@ -439,7 +439,7 @@ clippy.Agent.prototype = {
     },
 
     _addToQueue:function (func, scope) {
-        if (scope) func = $.proxy(func, scope);
+        if (scope) func = jQuery.proxy(func, scope);
         this._queue.queue(func);
     },
 
@@ -481,7 +481,7 @@ clippy.Animator = function (el, path, data, sounds) {
 
     this._setupElement(this._el);
     for (var i = 1; i < this._data.overlayCount; i++) {
-        var inner = this._setupElement($('<div></div>'));
+        var inner = this._setupElement(jQuery('<div></div>'));
 
         curr.append(inner);
         this._overlays.push(inner);
@@ -619,7 +619,7 @@ clippy.Animator.prototype = {
         this._draw();
         this._playSound();
 
-        this._loop = window.setTimeout($.proxy(this._step, this), this._currentFrame.duration);
+        this._loop = window.setTimeout(jQuery.proxy(this._step, this), this._currentFrame.duration);
 
 
         // fire events if the frames changed and we reached an end
@@ -669,10 +669,10 @@ clippy.Balloon.prototype = {
 
     _setup:function () {
 
-        this._balloon = $('<div class="clippy-balloon"><div class="clippy-tip"></div><div class="clippy-content"></div></div> ').hide();
+        this._balloon = jQuery('<div class="clippy-balloon"><div class="clippy-tip"></div><div class="clippy-content"></div></div> ').hide();
         this._content = this._balloon.find('.clippy-content');
 
-        $(document.body).append(this._balloon);
+        jQuery(document.body).append(this._balloon);
     },
 
     reposition:function () {
@@ -738,10 +738,10 @@ clippy.Balloon.prototype = {
         var bH = this._balloon.outerHeight();
         var bW = this._balloon.outerWidth();
 
-        var wW = $(window).width();
-        var wH = $(window).height();
-        var sT = $(document).scrollTop();
-        var sL = $(document).scrollLeft();
+        var wW = jQuery(window).width();
+        var wH = jQuery(window).height();
+        var sT = jQuery(document).scrollTop();
+        var sL = jQuery(document).scrollLeft();
 
         var top = o.top - sT;
         var left = o.left - sL;
@@ -782,7 +782,7 @@ clippy.Balloon.prototype = {
             return;
         }
 
-        this._hiding = window.setTimeout($.proxy(this._finishHideBalloon, this), this.CLOSE_BALLOON_DELAY);
+        this._hiding = window.setTimeout(jQuery.proxy(this._finishHideBalloon, this), this.CLOSE_BALLOON_DELAY);
     },
 
     _finishHideBalloon:function () {
@@ -801,7 +801,7 @@ clippy.Balloon.prototype = {
         var idx = 1;
 
 
-        this._addWord = $.proxy(function () {
+        this._addWord = jQuery.proxy(function () {
             if (!this._active) return;
             if (idx > words.length) {
                 this._active = false;
@@ -812,7 +812,7 @@ clippy.Balloon.prototype = {
             } else {
                 el.text(words.slice(0, idx).join(' '));
                 idx++;
-                this._loop = window.setTimeout($.proxy(this._addWord, this), time);
+                this._loop = window.setTimeout(jQuery.proxy(this._addWord, this), time);
             }
         }, this);
 
@@ -838,7 +838,7 @@ clippy.Balloon.prototype = {
 
     resume:function () {
         if (this._addWord)  this._addWord();
-        this._hiding = window.setTimeout($.proxy(this._finishHideBalloon, this), this.CLOSE_BALLOON_DELAY);
+        this._hiding = window.setTimeout(jQuery.proxy(this._finishHideBalloon, this), this.CLOSE_BALLOON_DELAY);
     }
 
 
@@ -870,7 +870,7 @@ clippy.load = function (name, successCb, failCb) {
         successCb(a);
     };
 
-    $.when(mapDfd, agentDfd, soundsDfd).done(cb).fail(failCb);
+    jQuery.when(mapDfd, agentDfd, soundsDfd).done(cb).fail(failCb);
 };
 
 clippy.load._maps = {};
@@ -879,7 +879,7 @@ clippy.load._loadMap = function (path) {
     if (dfd) return dfd;
 
     // set dfd if not defined
-    dfd = clippy.load._maps[path] = $.Deferred();
+    dfd = clippy.load._maps[path] = jQuery.Deferred();
 
     var src = path + '/map.png';
     var img = new Image();
@@ -900,7 +900,7 @@ clippy.load._loadSounds = function (name, path) {
     if (dfd) return dfd;
 
     // set dfd if not defined
-    dfd = clippy.load._sounds[name] = $.Deferred();
+    dfd = clippy.load._sounds[name] = jQuery.Deferred();
 
     var audio = document.createElement('audio');
     var canPlayMp3 = !!audio.canPlayType && "" != audio.canPlayType('audio/mpeg');
@@ -944,7 +944,7 @@ clippy.load._loadScript = function (src) {
 clippy.load._getAgentDfd = function (name) {
     var dfd = clippy.load._data[name];
     if (!dfd) {
-        dfd = clippy.load._data[name] = $.Deferred();
+        dfd = clippy.load._data[name] = jQuery.Deferred();
     }
     return dfd;
 };
@@ -957,7 +957,7 @@ clippy.ready = function (name, data) {
 clippy.soundsReady = function (name, data) {
     var dfd = clippy.load._sounds[name];
     if (!dfd) {
-        dfd = clippy.load._sounds[name] = $.Deferred();
+        dfd = clippy.load._sounds[name] = jQuery.Deferred();
     }
 
     dfd.resolve(data);
@@ -999,7 +999,7 @@ clippy.Queue.prototype = {
         this._active = true;
 
         // execute function
-        var completeFunction = $.proxy(this.next, this);
+        var completeFunction = jQuery.proxy(this.next, this);
         f(completeFunction);
     },
 

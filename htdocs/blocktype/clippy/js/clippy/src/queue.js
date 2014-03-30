@@ -34,7 +34,7 @@ clippy.Queue.prototype = {
         this._active = true;
 
         // execute function
-        var completeFunction = $.proxy(this.next, this);
+        var completeFunction = jQuery.proxy(this.next, this);
         f(completeFunction);
     },
 

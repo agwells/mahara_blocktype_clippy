@@ -24,7 +24,7 @@ clippy.load = function (name, successCb, failCb) {
         successCb(a);
     };
 
-    $.when(mapDfd, agentDfd, soundsDfd).done(cb).fail(failCb);
+    jQuery.when(mapDfd, agentDfd, soundsDfd).done(cb).fail(failCb);
 };
 
 clippy.load._maps = {};
@@ -33,7 +33,7 @@ clippy.load._loadMap = function (path) {
     if (dfd) return dfd;
 
     // set dfd if not defined
-    dfd = clippy.load._maps[path] = $.Deferred();
+    dfd = clippy.load._maps[path] = jQuery.Deferred();
 
     var src = path + '/map.png';
     var img = new Image();
@@ -54,7 +54,7 @@ clippy.load._loadSounds = function (name, path) {
     if (dfd) return dfd;
 
     // set dfd if not defined
-    dfd = clippy.load._sounds[name] = $.Deferred();
+    dfd = clippy.load._sounds[name] = jQuery.Deferred();
 
     var audio = document.createElement('audio');
     var canPlayMp3 = !!audio.canPlayType && "" != audio.canPlayType('audio/mpeg');
@@ -98,7 +98,7 @@ clippy.load._loadScript = function (src) {
 clippy.load._getAgentDfd = function (name) {
     var dfd = clippy.load._data[name];
     if (!dfd) {
-        dfd = clippy.load._data[name] = $.Deferred();
+        dfd = clippy.load._data[name] = jQuery.Deferred();
     }
     return dfd;
 };
@@ -111,7 +111,7 @@ clippy.ready = function (name, data) {
 clippy.soundsReady = function (name, data) {
     var dfd = clippy.load._sounds[name];
     if (!dfd) {
-        dfd = clippy.load._sounds[name] = $.Deferred();
+        dfd = clippy.load._sounds[name] = jQuery.Deferred();
     }
 
     dfd.resolve(data);

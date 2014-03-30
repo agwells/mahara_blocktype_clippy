@@ -17,10 +17,10 @@ clippy.Balloon.prototype = {
 
     _setup:function () {
 
-        this._balloon = $('<div class="clippy-balloon"><div class="clippy-tip"></div><div class="clippy-content"></div></div> ').hide();
+        this._balloon = jQuery('<div class="clippy-balloon"><div class="clippy-tip"></div><div class="clippy-content"></div></div> ').hide();
         this._content = this._balloon.find('.clippy-content');
 
-        $(document.body).append(this._balloon);
+        jQuery(document.body).append(this._balloon);
     },
 
     reposition:function () {
@@ -44,8 +44,8 @@ clippy.Balloon.prototype = {
         var o = this._targetEl.offset();
         var h = this._targetEl.height();
         var w = this._targetEl.width();
-        o.top -= $(window).scrollTop();
-        o.left -= $(window).scrollLeft();
+        o.top -= jQuery(window).scrollTop();
+        o.left -= jQuery(window).scrollLeft();
 
         var bH = this._balloon.outerHeight();
         var bW = this._balloon.outerWidth();
@@ -88,10 +88,10 @@ clippy.Balloon.prototype = {
         var bH = this._balloon.outerHeight();
         var bW = this._balloon.outerWidth();
 
-        var wW = $(window).width();
-        var wH = $(window).height();
-        var sT = $(document).scrollTop();
-        var sL = $(document).scrollLeft();
+        var wW = jQuery(window).width();
+        var wH = jQuery(window).height();
+        var sT = jQuery(document).scrollTop();
+        var sL = jQuery(document).scrollLeft();
 
         var top = o.top - sT;
         var left = o.left - sL;
@@ -132,7 +132,7 @@ clippy.Balloon.prototype = {
             return;
         }
 
-        this._hiding = window.setTimeout($.proxy(this._finishHideBalloon, this), this.CLOSE_BALLOON_DELAY);
+        this._hiding = window.setTimeout(jQuery.proxy(this._finishHideBalloon, this), this.CLOSE_BALLOON_DELAY);
     },
 
     _finishHideBalloon:function () {
@@ -151,7 +151,7 @@ clippy.Balloon.prototype = {
         var idx = 1;
 
 
-        this._addWord = $.proxy(function () {
+        this._addWord = jQuery.proxy(function () {
             if (!this._active) return;
             if (idx > words.length) {
                 delete this._addWord;
@@ -163,7 +163,7 @@ clippy.Balloon.prototype = {
             } else {
                 el.text(words.slice(0, idx).join(' '));
                 idx++;
-                this._loop = window.setTimeout($.proxy(this._addWord, this), time);
+                this._loop = window.setTimeout(jQuery.proxy(this._addWord, this), time);
             }
         }, this);
 
@@ -191,7 +191,7 @@ clippy.Balloon.prototype = {
         if (this._addWord) {
             this._addWord();
         } else if (!this._hold && !this._hidden) {
-            this._hiding = window.setTimeout($.proxy(this._finishHideBalloon, this), this.CLOSE_BALLOON_DELAY);
+            this._hiding = window.setTimeout(jQuery.proxy(this._finishHideBalloon, this), this.CLOSE_BALLOON_DELAY);
         }
     }
 

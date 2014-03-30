@@ -21,7 +21,7 @@ clippy.Animator = function (el, path, data, sounds) {
 
     this._setupElement(this._el);
     for (var i = 1; i < this._data.overlayCount; i++) {
-        var inner = this._setupElement($('<div></div>'));
+        var inner = this._setupElement(jQuery('<div></div>'));
 
         curr.append(inner);
         this._overlays.push(inner);
@@ -159,7 +159,7 @@ clippy.Animator.prototype = {
         this._draw();
         this._playSound();
 
-        this._loop = window.setTimeout($.proxy(this._step, this), this._currentFrame.duration);
+        this._loop = window.setTimeout(jQuery.proxy(this._step, this), this._currentFrame.duration);
 
 
         // fire events if the frames changed and we reached an end
